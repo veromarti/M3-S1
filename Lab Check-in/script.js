@@ -1,4 +1,3 @@
-
 alert("Welcome to the Access Gate");
 let flagMenu = false;
 let userInfo = {
@@ -10,7 +9,7 @@ let userInfo = {
 };
 
 function menu(){
-    const option = intValidation(`Choose an option \n1. Check-in \n2. Show user info \n3. Simulation \n4. Exit`,1,4);
+    const option = intValidation(`Choose an option \n1. Check-in \n2. Risk Calculator \n3. Simulation \n4. Exit`,1,4);
     return option
 }
 
@@ -81,7 +80,7 @@ function register() {
 
     if (optRole ===1) {
         userRole = 'coder';
-    } else if (opt === 2) {
+    } else if (optRole === 2) {
         userRole = 'tutor';
     }
 
@@ -100,26 +99,41 @@ function register() {
 
 function riskCalculation(user) {
     let risk = 0;
-    if (user.hours) {
-        
-    } else {
-        
+    if (user.hours < 2) {
+        risk+=2;
+    } else if (user.hours > 3){
+        risk--;
     }
+    if (user.role == 'visitor') {
+        risk+=2;
+    } else if (user.role == 'coder'){
+        risk--;
+    }
+    if (user.age>17 && user.age < 21) {
+        risk+=2;
+    }
+
+    if (risk < 0) {
+        risk = 0
+    }
+
+    return risk;
 }
 
 function showUser(user){
-    console.log(`Name: ${user.name} \nAge: ${user.age} \nCourses: ${user.courses}`);
-    let msg = 'You are older than 18';
-
-    if (user.age < 19) {
-        msg = 'You are under age';
-    }
-
-    alert(`Name: ${user.name} \nAge: ${user.age} \n${msg} \nCourses: ${user.courses}`);
+    alert(`Name: ${user.name} \nAge: ${user.age} \nHours: ${user.hours} \nRole: ${user.role}`)
     return
 }
 
-function evaluation() {
+function finalDecision(user) {
+    let decision = 'Allow'
+    if (user.age < 19 || user.acceptance === false) {
+        decision = 'Deny'
+    }
+    if (user.risk < 3){
+        decision = 'Review'
+    }
+
     let sumNotes = 0, prom = 0, notes = [];
     notes[0]  = intValidation("Enter note 1", 0,5);
     notes[1]  = intValidation("Enter note 2", 0,5);
@@ -146,10 +160,12 @@ function main(value){
         case 1:
             userInfo = register();
             alert("Check-in in process");
+            showUser(userInfo);
             break;
 
         case 2:
-            showUser(userInfo);
+            let userRisk = riskCalculation(userInfo);
+            console.log(userRisk)
             break;
         case 3:
             evaluation();
@@ -172,3 +188,40 @@ while (!flagMenu) {
         main(option);
     }
 }
+
+
+// ex 1
+
+// const header1 = document.querySelector('h1');
+
+// const name = prompt('name');
+
+// header1.textContent = 'Hello ' + name
+
+//ex 2
+
+// const inputName = document.querySelector('input')
+
+// function change() {
+//     header1.textContent = 'Hello ' + inputName.value
+// }
+
+//ex 3 PERSISTENCIA DE DATOS
+// document.addEventListener('DOMContentLoaded',() =>{
+//     const nameSave = localStorage.getItem('name')
+//     header1.textContent = 'Hello ' + nameSave
+    
+// }
+// )
+// const inputName = document.querySelector('input')
+
+// function change() {
+    
+//     header1.textContent = 'Hello ' + inputName.value
+//     localStorage.setItem('name',inputName.value)
+// }
+
+//ex 4 Cambio estilos
+
+document.body.style.background = 'black';
+document.body.style = 'background:red; color:white'
